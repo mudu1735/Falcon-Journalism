@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="mcps.phs.arx.NameFinder, mcps.phs.arx.LinkProcessing" %>
-<%@ page import="java.io.BufferedReader, java.io.FileReader, java.io.IOException" %>
+<%@ page import="java.io.BufferedReader, java.io.FileReader, java.io.IOException, java.util.ArrayList, java.util.List" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -25,7 +25,9 @@
 </head>
 <body>
 
-<h1>Scraped Content</h1>
+<button onclick="window.location.href='mainPage.jsp'">Back to Main Page</button>
+
+<h1>Newly Added Records</h1>
 
 <%
     String scrapeUrl = request.getParameter("userLink");
@@ -50,6 +52,13 @@
     // Reading and displaying the interviewRecords.csv file
     try (BufferedReader br = new BufferedReader(new FileReader(interviewRecordsFile))) {
         String line;
+        List<String> lines = new ArrayList<>();
+        
+        // Read all lines into the list
+        while ((line = br.readLine()) != null) {
+            lines.add(line);
+        }
+        
         // Retrieve newLines from request object
         int newLines = (int) request.getAttribute("newLines");
 %>
@@ -59,23 +68,33 @@
                     <th>First Name</th>
                     <th>Last Name</th>
                     <th>URL</th>
+                    <th>Date Added</th>
                 </tr>
             </thead>
             <tbody>
-<%      
-        int count = 0;
-        while ((line = br.readLine()) != null && count < newLines + 1) {
-            String[] values = line.split(",");
-            if (values.length == 3) {  // Ensure there are exactly three columns
+<%
+        // Print a message if newLines is 0
+        if (newLines == 0) {
+%>
+            <p>No new interviews were found</p>
+<%
+        } else {
+            // Iterate over the entire list in reverse order
+            for (int i = lines.size() - 1; i >= lines.size() - newLines; i--) {
+                String[] values = lines.get(i).split(",");
+                //System.out.println(lines);
+                
+                if (values.length == 4) {  // Ensure there are exactly four columns
 %>
                 <tr>
                     <td><%= values[0] %></td>
                     <td><%= values[1] %></td>
                     <td><a href="<%= values[2] %>"><%= values[2] %></a></td>
+                    <td><%= values[3] %></td>
                 </tr>
 <%
+                }
             }
-            count++;
         }
 %>
             </tbody>

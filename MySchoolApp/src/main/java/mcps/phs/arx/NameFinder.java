@@ -1,14 +1,11 @@
 package mcps.phs.arx;
-import java.io.FileWriter;
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.net.URL;
-import java.net.URLConnection;
-import java.net.URLEncoder;
-import java.util.StringTokenizer;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class NameFinder {
     private String csvFile;
@@ -22,7 +19,8 @@ public class NameFinder {
         
     }
 
-    public NameFinder(String csvFile, String articleUrl) {
+    public NameFinder(
+    	String csvFile, String articleUrl) {
         this.csvFile = csvFile;
         this.articleUrl = articleUrl;
     }
@@ -35,6 +33,7 @@ public class NameFinder {
     	int count = 0;
         String line;
         String articleContent = LinkProcessing.webScrape(articleUrl);
+        //System.out.println(articleContent);
         ClassLoader classLoader = getClass().getClassLoader();
         try (BufferedReader br = new BufferedReader(new InputStreamReader(classLoader.getResource(csvFile).openStream(),"UTF-8"))) {
             // Read each line of the CSV file
@@ -46,8 +45,10 @@ public class NameFinder {
                 System.out.println("searching "+name);
                 if (articleContent.contains(name)) {
                 	System.out.println("found "+name);
-                	writeNametoRecord(firstN, lastN, articleUrl);
-                	count++;
+                	if (writeNametoRecord(firstN, lastN, articleUrl)) {
+                        count++;
+                    }
+                	System.out.println("count in findNamesInArticle:"+count);
                 }
             }
         } catch (IOException e) {
@@ -63,19 +64,36 @@ public class NameFinder {
      * @param last: last name
      * @param url: the url of the article
      */
-    public void writeNametoRecord(String first, String last, String url) {
-    	String[] row = new String[]{first, last, url};
-  	
+    public boolean writeNametoRecord(String first, String last, String url) {
+        String date = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+    	String[] row = new String[]{first, last, url, date};
+    	
     	try (FileWriter writer = new FileWriter("c:\\tmp\\interviewRecords.csv",true)) {
-            
-                writer.append(String.join(",", row));
-                writer.append("\n");
+    			BufferedReader interviewReader = new BufferedReader(new FileReader("c:\\tmp\\interviewRecords.csv"));
+    			String readLine;
+    			while((readLine = interviewReader.readLine()) != null) {
+    				if (String.join(",", row).equals(readLine) == true){
+    					System.out.println("IT IS A DUPE");
+    					return false;
+    				}
+    			}
+    			
+    			writer.append(String.join(",", row));
+    			writer.append("\n");	
+    			interviewReader.close();
+    			return true;
+    			
+    			
+                
             
         } catch (IOException e) {
         	e.printStackTrace();
             System.err.println("Error writing data to CSV: " + e.getMessage());
+            return false;
         }
     }
+    
+    
     
 }
 

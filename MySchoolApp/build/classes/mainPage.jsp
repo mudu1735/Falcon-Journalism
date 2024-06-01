@@ -54,6 +54,9 @@
             cursor: not-allowed;
             color: #aaa;
         }
+        .view-all-button {
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body>
@@ -66,6 +69,8 @@
         <button type="submit">Submit</button>
     </div>
 </form>
+
+<button class="view-all-button" onclick="window.location.href='viewAllRecords.jsp'">View All Records</button>
 
 </body>
 </html>

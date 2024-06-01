@@ -56,7 +56,7 @@
         }
         h2 {
         	margin-top: 50px;
-            margin-bottom: 20px;
+            margin-bottom: 30px;
             font-size: 24px;
         }
         label {
@@ -64,8 +64,8 @@
             margin-bottom: 5px;
             font-weight: bold;
         }
-        input[type="text"],
-        input[type="password"] {
+        input[type="text"]
+         {
             width: 100%;
             padding: 10px;
             margin-bottom: 20px;
@@ -112,10 +112,10 @@
                 <h1>Poolesville Pulse Database</h1>
                 <h2>Sign In</h2>
                 <form id="loginForm" onsubmit="return validateForm()">
-                    <label for="username">Username</label>
+                    <label for="username">Token</label>
                     <input type="text" id="username" name="username" required>
-                    <label for="password">Password</label>
-                    <input type="password" id="password" name="password" required>
+                    
+                    
                     <input type="submit" value="Sign In">
                 </form>
             </div>
@@ -128,15 +128,15 @@
     <script>
         function validateForm() {
             var username = document.getElementById("username").value;
-            var password = document.getElementById("password").value;
+            
 
             // Simple validation
-            if (username === "a" && password === "a") {
+            if (username === "a") {
                 alert("Login successful!");
                 window.location.href = "mainPage.jsp"; // Redirect to mainPage.jsp
                 return false; // Prevent form submission
             } else {
-                alert("Invalid username or password.");
+                alert("Invalid username");
                 return false; // Prevent form submission
             }
         }
