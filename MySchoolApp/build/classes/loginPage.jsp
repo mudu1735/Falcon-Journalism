@@ -5,11 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login Page</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400&display=swap');
+
         body, html {
             margin: 0;
             padding: 0;
             height: 100%;
-            font-family: Arial, sans-serif;
+            font-family: 'Poppins', sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -19,8 +21,12 @@
             display: flex;
             width: 900px;
             height: 500px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25);
             background: #fff;
+            border-top-left-radius: 8px;
+            border-bottom-left-radius: 8px;
+            border-top-right-radius: 8px;
+            border-bottom-right-radius: 8px;
         }
         .image-section {
             flex: 1;
@@ -39,13 +45,6 @@
             padding: 20px;
             position: relative;
         }
-        .close-btn {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            font-size: 24px;
-            cursor: pointer;
-        }
         .form-container {
             width: 80%;
         }
@@ -55,7 +54,7 @@
             text-align: center;
         }
         h2 {
-        	margin-top: 50px;
+            margin-top: 50px;
             margin-bottom: 30px;
             font-size: 24px;
         }
@@ -64,8 +63,7 @@
             margin-bottom: 5px;
             font-weight: bold;
         }
-        input[type="text"]
-         {
+        input[type="text"] {
             width: 100%;
             padding: 10px;
             margin-bottom: 20px;
@@ -107,15 +105,12 @@
     <div class="container">
         <div class="image-section"></div>
         <div class="form-section">
-            <div class="close-btn">&times;</div>
             <div class="form-container">
                 <h1>Poolesville Pulse Database</h1>
                 <h2>Sign In</h2>
                 <form id="loginForm" onsubmit="return validateForm()">
                     <label for="username">Token</label>
                     <input type="text" id="username" name="username" required>
-                    
-                    
                     <input type="submit" value="Sign In">
                 </form>
             </div>
@@ -128,7 +123,6 @@
     <script>
         function validateForm() {
             var username = document.getElementById("username").value;
-            
 
             // Simple validation
             if (username === "a") {
