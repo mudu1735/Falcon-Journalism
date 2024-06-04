@@ -27,6 +27,7 @@
             border-bottom-left-radius: 8px;
             border-top-right-radius: 8px;
             border-bottom-right-radius: 8px;
+            position: relative;
         }
         .image-section {
             flex: 1;
@@ -99,6 +100,19 @@
         .footer a:hover {
             text-decoration: underline;
         }
+        .login-message {
+            display: none;
+            position: absolute;
+            top: 86%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border-radius: 0px;
+            color: green;
+            font-weight: bold;
+            z-index: 10;
+        }
     </style>
 </head>
 <body>
@@ -113,6 +127,7 @@
                     <input type="text" id="username" name="username" required>
                     <input type="submit" value="Sign In">
                 </form>
+                <div class="login-message" id="loginMessage">Logging you in...</div>
             </div>
             <div class="footer">
                 &copy; 2024 - ARX
@@ -126,8 +141,13 @@
 
             // Simple validation
             if (username === "a") {
-                alert("Login successful!");
-                window.location.href = "mainPage.jsp"; // Redirect to mainPage.jsp
+                var loginMessage = document.getElementById("loginMessage");
+                loginMessage.style.display = "block"; // Show the login message
+
+                setTimeout(function() {
+                    window.location.href = "mainPage.jsp"; // Redirect to mainPage.jsp after 1.5 second
+                }, 1500);
+
                 return false; // Prevent form submission
             } else {
                 alert("Invalid username");

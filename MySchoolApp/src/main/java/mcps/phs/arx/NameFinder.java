@@ -67,12 +67,15 @@ public class NameFinder {
     public boolean writeNametoRecord(String first, String last, String url) {
         String date = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
     	String[] row = new String[]{first, last, url, date};
+    	String[] rowNoDate = new String[] {first, last, url};
     	
     	try (FileWriter writer = new FileWriter("c:\\tmp\\interviewRecords.csv",true)) {
     			BufferedReader interviewReader = new BufferedReader(new FileReader("c:\\tmp\\interviewRecords.csv"));
     			String readLine;
+    			
     			while((readLine = interviewReader.readLine()) != null) {
-    				if (String.join(",", row).equals(readLine) == true){
+    		    	int indexOfLastComma = readLine.lastIndexOf(",");
+    				if (String.join(",", rowNoDate).equals(readLine.substring(0,indexOfLastComma)) == true){
     					System.out.println("IT IS A DUPE");
     					return false;
     				}
