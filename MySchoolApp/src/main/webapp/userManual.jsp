@@ -92,7 +92,7 @@
         <a href="mainPage.jsp">Home</a>
         <a href="viewAllRecords.jsp">View All Records</a>
         <a href="userManual.jsp">User Manual</a>
-        <button onclick="window.location.href='logout.jsp'">Sign Out</button>
+        <button onclick="window.location.href='loginPage.jsp'">Sign Out</button>
     </div>
 </nav>
 
@@ -102,7 +102,7 @@
     <p>Welcome to Falcon Journalism's official website. This guide will help you navigate through our website and make the most out of our features.</p>
 
     <h2>1. Home Page</h2>
-    <p>On the home page, you will find an input box that asks for the link of your article. Simply copy and paste the link of an existing article on the Poolesville Pulse. Click submit, and the article will automatically be processed.</p>
+    <p>On the home page, you will find an input box that asks for the link of your article. Simply copy and paste the link of an existing article on the Poolesville Pulse. Click submit, and the article will automatically be processed. It will display all of the interviews found in your submitted article. Note that some may not show up because duplicate submissions are filtered out.</p>
 
     <h2>2. View All Records</h2>
     <p>The "View All Records" page allows you to see a complete list of all interview records stored in our database. You can search for specific records using the search feature.</p>
@@ -110,7 +110,12 @@
         <li>To search by first name, enter the first name in the provided input box.</li>
         <li>To search by last name, enter the last name in the provided input box.</li>
         <li>To search by first AND last name, enter the first and last name in each corresponding input box.</li>
+        <li>To filter by grade, enter a grade level from 9-12. Enter "Staff" to filter records of staff members.</li>
+        <li>To filter by house, select a house from the dropdown menu.</li>
+        <li>To view the records from oldest to newest, select ascending in the "Sort by Date" dropdown menu.</li>
+        <li>To view the records from newest to oldest, select descending in the "Sort by Date" dropdown menu.</li>
         <li>Click the "Search" button to filter the records based on your input.</li>
+        
     </ul>
 
     <h2>3. Signing Out</h2>

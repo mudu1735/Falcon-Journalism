@@ -16,7 +16,8 @@ public class LinkProcessing {
             // Select elements with the specified class
             Elements bodyContents = document.getElementsByClass("sno-story-body-content");
             Elements titles = document.getElementsByClass("sno-story-headline");
-
+            Elements categories = document.select("sno-story-cat-block-list");
+            
             // Combine the title and body content, handling null or empty cases
             StringBuilder combinedContent = new StringBuilder();
 
@@ -38,6 +39,10 @@ public class LinkProcessing {
 
             // Append the URL
             combinedContent.append("<p>").append(url).append("</p>");
+            for (Element e: categories){
+            	
+            	combinedContent.append(e.html());
+            }
 
             return combinedContent.toString();
 

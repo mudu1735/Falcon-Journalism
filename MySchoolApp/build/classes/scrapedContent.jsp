@@ -35,8 +35,6 @@
             padding: 0 20px;
             margin: -10px;
             font-family: 'Poppins', sans-serif;
-      
-
         }
         .logo {
             display: flex;
@@ -95,10 +93,8 @@
     String interviewRecordsFile = "c:\\tmp\\interviewRecords.csv";
     
     try {
-        // Process the link to find names
         NameFinder nf = new NameFinder(csvFile, scrapeUrl);
         int newLines = nf.findNamesInArticle();
-        // Store newLines in request object
         request.setAttribute("newLines", newLines);
 %>
         <p>Successfully recorded</p>
@@ -109,17 +105,14 @@
 <%
     }
 
-    // Reading and displaying the interviewRecords.csv file
     try (BufferedReader br = new BufferedReader(new FileReader(interviewRecordsFile))) {
         String line;
         List<String> lines = new ArrayList<>();
-        
-        // Read all lines into the list
+
         while ((line = br.readLine()) != null) {
             lines.add(line);
         }
-        
-        // Retrieve newLines from request object
+
         int newLines = (int) request.getAttribute("newLines");
 %>
         <table>
@@ -127,30 +120,30 @@
                 <tr>
                     <th>First Name</th>
                     <th>Last Name</th>
+                    <th>Grade</th>
+                    <th>House</th>
                     <th>URL</th>
                     <th>Date Added</th>
                 </tr>
             </thead>
             <tbody>
 <%
-        // Print a message if newLines is 0
         if (newLines == 0) {
 %>
             <p>No new interviews were found</p>
 <%
         } else {
-            // Iterate over the entire list in reverse order
             for (int i = lines.size() - 1; i >= lines.size() - newLines; i--) {
                 String[] values = lines.get(i).split(",");
-                //System.out.println(lines);
-                
-                if (values.length == 4) {  // Ensure there are exactly four columns
+                if (values.length == 6) {
 %>
                 <tr>
                     <td><%= values[0] %></td>
                     <td><%= values[1] %></td>
-                    <td><a href="<%= values[2] %>"><%= values[2] %></a></td>
+                    <td><%= values[2] %></td>
                     <td><%= values[3] %></td>
+                    <td><a href="<%= values[4] %>"><%= values[4] %></a></td>
+                    <td><%= values[5] %></td>
                 </tr>
 <%
                 }
@@ -162,7 +155,7 @@
 <%
     } catch (IOException e) {
 %>
-        <p>Error reading CSV file: <%= e.getMessage() %></p>
+        <p>Error reading interview records: <%= e.getMessage() %></p>
 <%
     }
 %>

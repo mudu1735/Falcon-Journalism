@@ -64,7 +64,7 @@
             margin-bottom: 5px;
             font-weight: bold;
         }
-        input[type="text"] {
+        input[type="password"] {
             width: 100%;
             padding: 10px;
             margin-bottom: 20px;
@@ -124,7 +124,7 @@
                 <h2>Sign In</h2>
                 <form id="loginForm" onsubmit="return validateForm()">
                     <label for="username">Token</label>
-                    <input type="text" id="username" name="username" required>
+                    <input type="password" id="username" name="username" required>
                     <input type="submit" value="Sign In">
                 </form>
                 <div class="login-message" id="loginMessage">Logging you in...</div>
@@ -150,7 +150,6 @@
 
                 return false; // Prevent form submission
             } else {
-                alert("Invalid username");
                 return false; // Prevent form submission
             }
         }

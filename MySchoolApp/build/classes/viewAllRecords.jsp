@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ page import="java.io.BufferedReader, java.io.FileReader, java.io.IOException, java.util.ArrayList, java.util.List" %>
+<%@ page import="java.io.BufferedReader, java.io.FileReader, java.io.IOException, java.util.ArrayList, java.util.Collections, java.util.List" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -75,13 +75,14 @@
             margin-right: 10px;
             font-size: 16px;
         }
-        form input {
+        form input, form select {
             font-family: 'Poppins', sans-serif;
             padding: 10px;
             margin-right: 10px;
-            border: 1px solid #ddd;
+            border: 1px solid #000000;
             border-radius: 5px;
             font-size: 16px;
+            width: 150px;
         }
         form button {
             font-family: 'Poppins', sans-serif;
@@ -120,6 +121,21 @@
     <input type="text" id="searchFirstName" name="searchFirstName">
     <label for="searchLastName">Last Name:</label>
     <input type="text" id="searchLastName" name="searchLastName">
+    <label for="searchGrade">Grade:</label>
+    <input type="text" id="searchGrade" name="searchGrade">
+    <label for="searchHouse">House:</label>
+    <select id="searchHouse" name="searchHouse">
+        <option value="">All</option>
+        <option value="SMCS" <%= "SMCS".equals(request.getParameter("searchHouse")) ? "selected" : "" %>>SMCS</option>
+        <option value="Global" <%= "Global".equals(request.getParameter("searchHouse")) ? "selected" : "" %>>Global</option>
+        <option value="Humanities" <%= "Humanities".equals(request.getParameter("searchHouse")) ? "selected" : "" %>>Humanities</option>
+        <option value="ISP" <%= "ISP".equals(request.getParameter("searchHouse")) ? "selected" : "" %>>ISP</option>
+    </select>
+    <label for="sortOrder">Sort By Date:</label>
+    <select id="sortOrder" name="sortOrder">
+        <option value="asc" <%= "asc".equals(request.getParameter("sortOrder")) ? "selected" : "" %>>Ascending</option>
+        <option value="desc" <%= "desc".equals(request.getParameter("sortOrder")) ? "selected" : "" %>>Descending</option>
+    </select>
     <button type="submit">Search</button>
 </form>
 
@@ -134,35 +150,50 @@
 
         // Read all lines into the list
         while ((line = br.readLine()) != null) {
-            System.out.println(line);
             String[] values = line.split(",");
-            if (values.length == 4) {  // Ensure there are exactly four columns
+            if (values.length == 6) {  // Ensure there are exactly six columns
                 records.add(values);
             }
         }
 
-        // Get search first name and last name from request parameters
+        // Get search parameters from request
         String searchFirstName = request.getParameter("searchFirstName");
         String searchLastName = request.getParameter("searchLastName");
+        String searchGrade = request.getParameter("searchGrade");
+        String searchHouse = request.getParameter("searchHouse");
+        String sortOrder = request.getParameter("sortOrder");
 
-        // Filter records based on search first name and last name
+        // Filter records based on search parameters
         List<String[]> filteredRecords = new ArrayList<>();
-        if ((searchFirstName != null && !searchFirstName.isEmpty()) || (searchLastName != null && !searchLastName.isEmpty())) {
+        if ((searchFirstName != null && !searchFirstName.isEmpty()) || 
+            (searchLastName != null && !searchLastName.isEmpty()) || 
+            (searchGrade != null && !searchGrade.isEmpty()) || 
+            (searchHouse != null && !searchHouse.isEmpty())) {
             for (String[] record : records) {
                 if ((searchFirstName == null || searchFirstName.isEmpty() || record[0].equalsIgnoreCase(searchFirstName)) &&
-                        (searchLastName == null || searchLastName.isEmpty() || record[1].equalsIgnoreCase(searchLastName))) {
+                        (searchLastName == null || searchLastName.isEmpty() || record[1].equalsIgnoreCase(searchLastName)) &&
+                        (searchGrade == null || searchGrade.isEmpty() || record[2].equalsIgnoreCase(searchGrade)) &&
+                        (searchHouse == null || searchHouse.isEmpty() || record[3].equalsIgnoreCase(searchHouse))) {
                     filteredRecords.add(record);
                 }
             }
         } else {
-            filteredRecords = records; // If search first name and last name are not provided, show all records
+            filteredRecords = records; // If no search parameters are provided, show all records
         }
+
+        // Reverse the list if sortOrder is "desc"
+        if ("desc".equals(sortOrder)) {
+            Collections.reverse(filteredRecords);
+        }
+
 %>
 <table>
     <thead>
     <tr>
         <th>First Name</th>
         <th>Last Name</th>
+        <th>Grade</th>
+        <th>House</th>
         <th>URL</th>
         <th>Date Added</th>
     </tr>
@@ -172,8 +203,10 @@
     <tr>
         <td><%= record[0] %></td>
         <td><%= record[1] %></td>
-        <td><a href="<%= record[2] %>"><%= record[2] %></a></td>
+        <td><%= record[2] %></td>
         <td><%= record[3] %></td>
+        <td><a href="<%= record[4] %>"><%= record[4] %></a></td>
+        <td><%= record[5] %></td>
     </tr>
     <% } %>
     </tbody>
