@@ -64,13 +64,21 @@
             margin-bottom: 5px;
             font-weight: bold;
         }
-        input[type="password"] {
+        input[type="password"], input[type="text"] {
             width: 100%;
             padding: 10px;
             margin-bottom: 20px;
             border: 1px solid #ccc;
             border-radius: 5px;
             box-sizing: border-box;
+        }
+        .show-password {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .show-password input {
+            margin-right: 10px;
         }
         input[type="submit"] {
             width: 100%;
@@ -81,6 +89,7 @@
             color: black;
             font-size: 16px;
             cursor: pointer;
+            margin-bottom: 10px;
         }
         input[type="submit"]:hover {
             background-color: #D3D3D3;
@@ -106,7 +115,7 @@
             top: 86%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background-color: rgba(255, 255, 255, 0.9);
+            background-color: rgba(255, 255, 255, 0);
             padding: 20px;
             border-radius: 0px;
             color: green;
@@ -125,6 +134,10 @@
                 <form id="loginForm" onsubmit="return validateForm()">
                     <label for="username">Token</label>
                     <input type="password" id="username" name="username" required>
+                    <div class="show-password">
+                        <input type="checkbox" id="showPassword" onclick="togglePasswordVisibility()">
+                        <label for="showPassword">Show password</label>
+                    </div>
                     <input type="submit" value="Sign In">
                 </form>
                 <div class="login-message" id="loginMessage">Logging you in...</div>
@@ -136,6 +149,16 @@
     </div>
 
     <script>
+        function togglePasswordVisibility() {
+            var passwordInput = document.getElementById("username");
+            var showPasswordCheckbox = document.getElementById("showPassword");
+            if (showPasswordCheckbox.checked) {
+                passwordInput.type = "text";
+            } else {
+                passwordInput.type = "password";
+            }
+        }
+
         function validateForm() {
             var username = document.getElementById("username").value;
 
