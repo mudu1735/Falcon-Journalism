@@ -8,9 +8,18 @@ import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import org.bson.Document;
+import com.mongodb.client.MongoClient;
+import com.mongodb.client.MongoClients;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
+
 public class NameFinder {
     private String csvFile;
     private String articleUrl;
+    private static MongoClient mongoClient = MongoClients.create("mongodb+srv://mudu1735:nB6zdJu0ap6DXmni@cluster0.jeailsf.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0");
+    private static MongoCollection<Document> interviews;
+    private static MongoCollection<Document> names;
 
     public static void main(String[] args) {
         String csvFile = "src/main/webapp/resource/names.csv";
@@ -58,13 +67,27 @@ public class NameFinder {
 
     public boolean writeNametoRecord(String first, String last, String grade, String house, String url) {
         String date = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+        Document newDocument = new Document("firstName", first)
+                .append("lastName", last)
+                .append("grade", grade)
+                .append("house", house)
+                .append("url", url)
+                .append("date", date);
+        
+        MongoDatabase database = mongoClient.getDatabase("mudu1735");
+        interviews = database.getCollection("interviewRecords");
+        interviews.insertOne(newDocument);
+        
+
+        
+        
         String[] row = new String[]{first, last, grade, house, url, date};
         String[] rowNoDate = new String[]{first, last, grade, house, url};
 
         try (FileWriter writer = new FileWriter("c:\\tmp\\interviewRecords.csv", true)) {
             BufferedReader interviewReader = new BufferedReader(new FileReader("c:\\tmp\\interviewRecords.csv"));
             String readLine;
-
+            /*
             while ((readLine = interviewReader.readLine()) != null) {
                 int indexOfLastComma = readLine.lastIndexOf(",");
                 if (String.join(",", rowNoDate).equals(readLine.substring(0, indexOfLastComma))) {
@@ -72,7 +95,7 @@ public class NameFinder {
                     return false;
                 }
             }
-
+			*/
             writer.append(String.join(",", row));
             writer.append("\n");
             interviewReader.close();
