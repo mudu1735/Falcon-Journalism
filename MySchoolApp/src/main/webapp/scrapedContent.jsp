@@ -1,10 +1,13 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="mcps.phs.arx.NameFinder, mcps.phs.arx.LinkProcessing" %>
 <%@ page import="java.io.BufferedReader, java.io.FileReader, java.io.IOException, java.util.ArrayList, java.util.List" %>
+<%@ page import="com.mongodb.client.MongoClients, com.mongodb.client.MongoClient, com.mongodb.client.MongoDatabase, com.mongodb.client.MongoCollection, com.mongodb.client.model.Sorts, com.mongodb.client.FindIterable"%>
+<%@ page import="org.bson.Document" %>
+<%@ page import="com.mongodb.client.model.Filters" %>
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Record Submitted</title>
+    <title>Most Recently Added Records</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400&display=swap');
         body {
@@ -41,7 +44,7 @@
             align-items: center;
         }
         .logo img {
-            height: 60px;
+            height: 80px;
             margin-right: 2px;
         }
         .logo span {
@@ -74,7 +77,7 @@
 <body>
 <nav>
     <div class="logo">
-        <img src="https://lh7-us.googleusercontent.com/ijnjbn2z7Haqm89zaW21ot3TIBEuhhjyQYGQDwdBGuMHQkp6H_pcRUGa3VKrzASCpef2Pw72pb7JcZZiigMblJkBHupfFxS80Khc6vmaV86DcVVNRSe75hLnnkSIehhz1O4BM39Uxmi0NgYYk3jNlyI" alt="Logo Placeholder">
+        <img src="https://cdn.discordapp.com/attachments/649035487247597571/1253855182924677170/Untitled-removebg-preview.png?ex=66775f23&is=66760da3&hm=4fde98d0b3d7843fdcc82a73cdc921a507edafc110ffcce301d0e614bb9997fa&" alt="Logo Placeholder">
         <span>Falcon Journalism</span>
     </div>
     <div class="nav-links">
@@ -90,30 +93,24 @@
 <%
     String scrapeUrl = request.getParameter("userLink");
     String csvFile = "names.csv";
-    String interviewRecordsFile = "c:\\tmp\\interviewRecords.csv";
     
     try {
-        NameFinder nf = new NameFinder(csvFile, scrapeUrl);
-        int newLines = nf.findNamesInArticle();
+        NameFinder nf = new NameFinder(scrapeUrl);
+        int newLines = nf.findNamesInArticle(); // Retrieve the number of new lines
+		//System.out.println(newLines);
         request.setAttribute("newLines", newLines);
-%>
-        <p>Successfully recorded</p>
-<%
-    } catch (IOException e) {
-%>
-        <p>Error fetching URL: <%= e.getMessage() %></p>
-<%
-    }
 
-    try (BufferedReader br = new BufferedReader(new FileReader(interviewRecordsFile))) {
-        String line;
-        List<String> lines = new ArrayList<>();
+        // Connect to MongoDB
+        MongoClient mongoClient = MongoClients.create("mongodb+srv://mudu1735:nB6zdJu0ap6DXmni@cluster0.jeailsf.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0");
+        MongoDatabase database = mongoClient.getDatabase("mudu1735");
+        MongoCollection<Document> collection = database.getCollection("interviewRecords");
 
-        while ((line = br.readLine()) != null) {
-            lines.add(line);
-        }
+        // Find last `newLines` documents sorted by insertion order
+        FindIterable<Document> cursor = collection.find().sort(Sorts.descending("_id")).limit(newLines);
 
-        int newLines = (int) request.getAttribute("newLines");
+        List<Document> documents = new ArrayList<>();
+        cursor.into(documents);
+
 %>
         <table>
             <thead>
@@ -132,22 +129,20 @@
 %>
             <p>No new interviews were found</p>
 <%
+
         } else {
-            for (int i = lines.size() - 1; i >= lines.size() - newLines; i--) {
-                String[] values = lines.get(i).split(",");
-                if (values.length == 6) {
+        	for (Document doc : documents) {
 %>
                 <tr>
-                    <td><%= values[0] %></td>
-                    <td><%= values[1] %></td>
-                    <td><%= values[2] %></td>
-                    <td><%= values[3] %></td>
-                    <td><a href="<%= values[4] %>"><%= values[4] %></a></td>
-                    <td><%= values[5] %></td>
+                    <td><%= doc.getString("firstName") %></td>
+                    <td><%= doc.getString("lastName") %></td>
+                    <td><%= doc.getString("grade") %></td>
+                    <td><%= doc.getString("house") %></td>
+                    <td><a href="<%= doc.getString("url") %>"><%= doc.getString("url") %></a></td>
+                    <td><%= doc.getString("date") %></td>
                 </tr>
 <%
-                }
-            }
+        	}
         }
 %>
             </tbody>
@@ -155,7 +150,7 @@
 <%
     } catch (IOException e) {
 %>
-        <p>Error reading interview records: <%= e.getMessage() %></p>
+        <p>Error fetching URL: <%= e.getMessage() %></p>
 <%
     }
 %>

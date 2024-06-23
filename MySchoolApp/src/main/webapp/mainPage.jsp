@@ -35,7 +35,7 @@
             height: 100%;
         }
         .logo img {
-            height: 60px;
+            height: 80px;
             margin-right: 2px;
             margin-left: 0px;
         }
@@ -121,7 +121,7 @@
 
 <nav>
     <div class="logo">
-        <img src="https://lh7-us.googleusercontent.com/ijnjbn2z7Haqm89zaW21ot3TIBEuhhjyQYGQDwdBGuMHQkp6H_pcRUGa3VKrzASCpef2Pw72pb7JcZZiigMblJkBHupfFxS80Khc6vmaV86DcVVNRSe75hLnnkSIehhz1O4BM39Uxmi0NgYYk3jNlyI" alt="Logo Placeholder">
+        <img src="https://cdn.discordapp.com/attachments/649035487247597571/1253855182924677170/Untitled-removebg-preview.png?ex=66775f23&is=66760da3&hm=4fde98d0b3d7843fdcc82a73cdc921a507edafc110ffcce301d0e614bb9997fa&" alt="Logo Placeholder">
         <span>Falcon Journalism</span>
     </div>
     <div class="nav-links">

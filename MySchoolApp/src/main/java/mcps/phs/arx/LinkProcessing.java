@@ -24,7 +24,8 @@ public class LinkProcessing {
             if (titles != null && !titles.isEmpty()) {
                 combinedContent.append(titles.first().html());
             } else {
-                combinedContent.append("<h1>No title found</h1>");
+            	titles = document.getElementsByClass("storyheadline");
+                combinedContent.append(titles.first().html());
             }
 
             if (bodyContents != null && !bodyContents.isEmpty()) {
@@ -34,7 +35,8 @@ public class LinkProcessing {
                 captions.remove();
                 combinedContent.append(bodyContent.html());
             } else {
-                combinedContent.append("<p>No body content found</p>");
+            	bodyContents = document.getElementsByClass("storycontent");
+                combinedContent.append(bodyContents.html());
             }
 
             // Append the URL
