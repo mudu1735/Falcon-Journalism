@@ -1,5 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ page import="java.io.BufferedReader, java.io.FileReader, java.io.IOException, java.util.ArrayList, java.util.Collections, java.util.List" %>
+<%@ page import="com.mongodb.client.MongoClients, com.mongodb.client.MongoClient, com.mongodb.client.MongoDatabase, com.mongodb.client.MongoCollection" %>
+<%@ page import="org.bson.Document" %>
+<%@ page import="com.mongodb.client.model.Filters" %>
+<%@ page import="java.util.ArrayList, java.util.List" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -39,7 +42,7 @@
             align-items: center;
         }
         .logo img {
-            height: 60px;
+            height: 80px;
             margin-right: 2px;
         }
         .logo span {
@@ -103,7 +106,7 @@
 <body>
 <nav>
     <div class="logo">
-        <img src="https://lh7-us.googleusercontent.com/ijnjbn2z7Haqm89zaW21ot3TIBEuhhjyQYGQDwdBGuMHQkp6H_pcRUGa3VKrzASCpef2Pw72pb7JcZZiigMblJkBHupfFxS80Khc6vmaV86DcVVNRSe75hLnnkSIehhz1O4BM39Uxmi0NgYYk3jNlyI" alt="Logo Placeholder">
+        <img src="https://cdn.discordapp.com/attachments/649035487247597571/1253855182924677170/Untitled-removebg-preview.png?ex=66775f23&is=66760da3&hm=4fde98d0b3d7843fdcc82a73cdc921a507edafc110ffcce301d0e614bb9997fa&" alt="Logo Placeholder">
         <span>Falcon Journalism</span>
     </div>
     <div class="nav-links">
@@ -126,10 +129,10 @@
     <label for="searchHouse">House:</label>
     <select id="searchHouse" name="searchHouse">
         <option value="">All</option>
-        <option value="SMCS" <%= "SMCS".equals(request.getParameter("searchHouse")) ? "selected" : "" %>>SMCS</option>
-        <option value="Global" <%= "Global".equals(request.getParameter("searchHouse")) ? "selected" : "" %>>Global</option>
-        <option value="Humanities" <%= "Humanities".equals(request.getParameter("searchHouse")) ? "selected" : "" %>>Humanities</option>
-        <option value="ISP" <%= "ISP".equals(request.getParameter("searchHouse")) ? "selected" : "" %>>ISP</option>
+        <option value="SMCS" <%= "SMCS".equalsIgnoreCase(request.getParameter("searchHouse")) ? "selected" : "" %>>SMCS</option>
+        <option value="Global" <%= "Global".equalsIgnoreCase(request.getParameter("searchHouse")) ? "selected" : "" %>>Global</option>
+        <option value="Humanities" <%= "Humanities".equalsIgnoreCase(request.getParameter("searchHouse")) ? "selected" : "" %>>Humanities</option>
+        <option value="ISP" <%= "ISP".equalsIgnoreCase(request.getParameter("searchHouse")) ? "selected" : "" %>>ISP</option>
     </select>
     <label for="sortOrder">Sort By Date:</label>
     <select id="sortOrder" name="sortOrder">
@@ -140,21 +143,14 @@
 </form>
 
 <%
-    String interviewRecordsFile = "c:\\tmp\\interviewRecords.csv";
+    // MongoDB connection settings
+    String connectionString = "mongodb+srv://mudu1735:nB6zdJu0ap6DXmni@cluster0.jeailsf.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
+    String databaseName = "mudu1735";
+    String collectionName = "interviewRecords";
 
-    // Reading and displaying the interviewRecords.csv file
-    try (BufferedReader br = new BufferedReader(new FileReader(interviewRecordsFile))) {
-        String line;
-
-        List<String[]> records = new ArrayList<>();
-
-        // Read all lines into the list
-        while ((line = br.readLine()) != null) {
-            String[] values = line.split(",");
-            if (values.length == 6) {  // Ensure there are exactly six columns
-                records.add(values);
-            }
-        }
+    try (MongoClient mongoClient = MongoClients.create(connectionString)) {
+        MongoDatabase database = mongoClient.getDatabase(databaseName);
+        MongoCollection<Document> collection = database.getCollection(collectionName);
 
         // Get search parameters from request
         String searchFirstName = request.getParameter("searchFirstName");
@@ -163,28 +159,26 @@
         String searchHouse = request.getParameter("searchHouse");
         String sortOrder = request.getParameter("sortOrder");
 
-        // Filter records based on search parameters
-        List<String[]> filteredRecords = new ArrayList<>();
-        if ((searchFirstName != null && !searchFirstName.isEmpty()) || 
-            (searchLastName != null && !searchLastName.isEmpty()) || 
-            (searchGrade != null && !searchGrade.isEmpty()) || 
-            (searchHouse != null && !searchHouse.isEmpty())) {
-            for (String[] record : records) {
-                if ((searchFirstName == null || searchFirstName.isEmpty() || record[0].equalsIgnoreCase(searchFirstName)) &&
-                        (searchLastName == null || searchLastName.isEmpty() || record[1].equalsIgnoreCase(searchLastName)) &&
-                        (searchGrade == null || searchGrade.isEmpty() || record[2].equalsIgnoreCase(searchGrade)) &&
-                        (searchHouse == null || searchHouse.isEmpty() || record[3].equalsIgnoreCase(searchHouse))) {
-                    filteredRecords.add(record);
-                }
-            }
-        } else {
-            filteredRecords = records; // If no search parameters are provided, show all records
+        // Build the filter
+        Document filter = new Document();
+        if (searchFirstName != null && !searchFirstName.isEmpty()) {
+            filter.append("firstName", new Document("$regex", "^" + searchFirstName + "$").append("$options", "i"));
+        }
+        if (searchLastName != null && !searchLastName.isEmpty()) {
+            filter.append("lastName", new Document("$regex", "^" + searchLastName + "$").append("$options", "i"));
+        }
+        if (searchGrade != null && !searchGrade.isEmpty()) {
+        	filter.append("grade", new Document("$regex", "^" + searchGrade + "$").append("$options", "i"));
+        }
+        if (searchHouse != null && !searchHouse.isEmpty()) {
+            filter.append("house", new Document("$regex", "^" + searchHouse + "$").append("$options", "i"));
         }
 
-        // Reverse the list if sortOrder is "desc"
-        if ("desc".equals(sortOrder)) {
-            Collections.reverse(filteredRecords);
-        }
+        // Sort order
+        Document sort = new Document("time", "asc".equals(sortOrder) ? 1 : -1);
+
+        // Query the collection
+        List<Document> records = collection.find(filter).sort(sort).into(new ArrayList<>());
 
 %>
 <table>
@@ -199,22 +193,22 @@
     </tr>
     </thead>
     <tbody>
-    <% for (String[] record : filteredRecords) { %>
+    <% for (Document record : records) { %>
     <tr>
-        <td><%= record[0] %></td>
-        <td><%= record[1] %></td>
-        <td><%= record[2] %></td>
-        <td><%= record[3] %></td>
-        <td><a href="<%= record[4] %>"><%= record[4] %></a></td>
-        <td><%= record[5] %></td>
+        <td><%= record.getString("firstName") %></td>
+        <td><%= record.getString("lastName") %></td>
+        <td><%= record.getString("grade") %></td>
+        <td><%= record.getString("house") %></td>
+        <td><a href="<%= record.getString("url") %>"><%= record.getString("url") %></a></td>
+        <td><%= record.getString("date") %></td>
     </tr>
     <% } %>
     </tbody>
 </table>
 <%
-    } catch (IOException e) {
+    } catch (Exception e) {
 %>
-<p>Error reading CSV file: <%= e.getMessage() %></p>
+<p>Error connecting to MongoDB or retrieving records: <%= e.getMessage() %></p>
 <%
     }
 %>
