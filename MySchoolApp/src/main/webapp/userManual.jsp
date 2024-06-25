@@ -17,6 +17,7 @@
     }
     nav {
         width: 100%;
+        height: 10%;
         background-color: #000000;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         display: flex;
@@ -85,13 +86,14 @@
 <body>
 <nav>
     <div class="logo">
-        <img src="https://cdn.discordapp.com/attachments/649035487247597571/1253855182924677170/Untitled-removebg-preview.png?ex=66775f23&is=66760da3&hm=4fde98d0b3d7843fdcc82a73cdc921a507edafc110ffcce301d0e614bb9997fa&" alt="Logo Placeholder">
+        <img src="https://github.com/mudu1735/Falcon-Journalism/blob/main/ARXlogo-removebg-preview.png?raw=true" alt="Logo Placeholder">
         <span>Falcon Journalism</span>
     </div>
     <div class="nav-links">
         <a href="mainPage.jsp">Home</a>
         <a href="viewAllRecords.jsp">View All Records</a>
         <a href="userManual.jsp">User Manual</a>
+        <a href="uploadNames.jsp">Update Names</a>
         <button onclick="window.location.href='loginPage.jsp'">Sign Out</button>
     </div>
 </nav>

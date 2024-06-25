@@ -84,6 +84,7 @@
         <a href="mainPage.jsp">Home</a>
         <a href="viewAllRecords.jsp">View All Records</a>
         <a href="userManual.jsp">User Manual</a>
+        <a href="uploadNames.jsp">Update Names</a>
         <button onclick="window.location.href='loginPage.jsp'">Sign Out</button>
     </div>
 </nav>

@@ -6,8 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Falcon Journalism Interview Database</title>
     <style>
-    	@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400&display=swap');
-    	
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400&display=swap');
+        
         body {
             font-family: 'Poppins', sans-serif;
             display: flex;
@@ -121,13 +121,14 @@
 
 <nav>
     <div class="logo">
-        <img src="https://cdn.discordapp.com/attachments/649035487247597571/1253855182924677170/Untitled-removebg-preview.png?ex=66775f23&is=66760da3&hm=4fde98d0b3d7843fdcc82a73cdc921a507edafc110ffcce301d0e614bb9997fa&" alt="Logo Placeholder">
+        <img src="https://github.com/mudu1735/Falcon-Journalism/blob/main/ARXlogo-removebg-preview.png?raw=true" alt="Logo Placeholder">
         <span>Falcon Journalism</span>
     </div>
     <div class="nav-links">
         <a href="mainPage.jsp">Home</a>
         <a href="viewAllRecords.jsp">View All Records</a>
         <a href="userManual.jsp">User Manual</a>
+        <a href="uploadNames.jsp">Upload CSV</a> <!-- New Nav Link -->
         <button onclick="window.location.href='loginPage.jsp'">Sign Out</button>
     </div>
 </nav>
