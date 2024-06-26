@@ -81,6 +81,10 @@
     ul li {
         margin-bottom: 10px;
     }
+    .ex-img {
+    	display:block;
+    	margin: 40px auto;
+    }
 </style>
 </head>
 <body>
@@ -119,8 +123,22 @@
         <li>Click the "Search" button to filter the records based on your input.</li>
         
     </ul>
+    <h2>3. Updating Names</h2>
+    <ol type="1">
+  		<li>Create a Google Spreadsheet.</li>
+  		<li>Your spreadsheet should have 4 columns, one for each relevant data field.</li>
+  		<li>Format each individual and their information as shown below: </li>
+  	</ol>
+  	<img class = "ex-img" src="https://raw.githubusercontent.com/mudu1735/Falcon-Journalism/main/dataExample.png" alt="Logo Placeholder">
+  	<ol start="4">
+  		<li>For staff members, input their grade level as "Staff" and their house as "N/A".</li>
+  		<li>In the top left corner of your spreadsheet click <strong>File  >  Download  >  Comma Separated Values (.csv).</strong></li>
+  		<li>Navigate to the "Update Names" page, select your .csv file, and click the "upload" button.</li>
+	</ol>  
 
-    <h2>3. Signing Out</h2>
+    <p></p>
+
+    <h2>4. Sign Out</h2>
     <p>To sign out, click the "Sign Out" button in the navigation bar. This will end your session and redirect you to the login page.</p>
 
     <h2>Contact Us</h2>

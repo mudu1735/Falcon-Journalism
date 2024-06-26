@@ -101,6 +101,9 @@
             background-color: #ddd;
             color: black;
         }
+        .nowrap {
+        	white-space: nowrap;
+        }
     </style>
 </head>
 <body>
@@ -201,7 +204,7 @@
         <td><%= record.getString("grade") %></td>
         <td><%= record.getString("house") %></td>
         <td><a href="<%= record.getString("url") %>"><%= record.getString("url") %></a></td>
-        <td><%= record.getString("date") %></td>
+        <td class = "nowrap"><%= record.getString("date") %></td>
     </tr>
     <% } %>
     </tbody>
