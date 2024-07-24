@@ -1,5 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
+    
+ <jsp:include page="sessionCheck.jsp" />
+ 
 <!DOCTYPE html>
 <html>
 <head>
@@ -80,19 +83,34 @@
     ul li {
         margin-bottom: 10px;
     }
+    .center {
+  		display: block;
+ 		margin-left: auto;
+  		margin-right: auto;
+ 		width: 50%;
+ 		margin-top: 35px;
+ 		margin-bottom: 35px;
+	}
+	
 </style>
 </head>
 <body>
 <nav>
     <div class="logo">
-        <img src="https://cdn.discordapp.com/attachments/649035487247597571/1253855182924677170/Untitled-removebg-preview.png?ex=66775f23&is=66760da3&hm=4fde98d0b3d7843fdcc82a73cdc921a507edafc110ffcce301d0e614bb9997fa&" alt="Logo Placeholder">
+        <img src="https://raw.githubusercontent.com/mudu1735/Falcon-Journalism/main/ARXlogo-removebg-preview.png" alt="Logo Placeholder">
         <span>Falcon Journalism</span>
     </div>
     <div class="nav-links">
         <a href="mainPage.jsp">Home</a>
         <a href="viewAllRecords.jsp">View All Records</a>
         <a href="userManual.jsp">User Manual</a>
-        <button onclick="window.location.href='loginPage.jsp'">Sign Out</button>
+        <% if("admin".equals(session.getAttribute("user"))) {         
+		%>
+        	<a href="uploadNames.jsp">Upload CSV</a> 
+
+        <% } %>
+        
+        <button onclick="window.location.href='sessionEnd.jsp'">Sign Out</button>
     </div>
 </nav>
 
@@ -120,7 +138,19 @@
 
     <h2>3. Signing Out</h2>
     <p>To sign out, click the "Sign Out" button in the navigation bar. This will end your session and redirect you to the login page.</p>
-
+	
+	<h2>4. Updating Names</h2>
+	<p>To update the names of students and staff, click the "Upload CSV" button in the navigation bar. </p>
+	<ol>
+		<li>Create a new Google Spreadsheet</li>
+		<li>Format the student and staff information as shown below:</li>
+	</ol>
+	<img src="https://github.com/mudu1735/Falcon-Journalism/blob/main/dataExample.png?raw=true" alt="alternatetext" class="center">
+	<ol start="3">
+		<li>In the top right corner, click <strong>File -> Download -> Comma Separated Values (.csv)</strong></li>
+		<li>Upload your .csv file in the "Upload CSV" page, and click upload</li>
+	</ol>
+	
     <h2>Contact Us</h2>
     <p>If you have any questions or need further assistance, please feel free to contact our support team at smcs2026.arx@gmail.com.</p>
 </div>

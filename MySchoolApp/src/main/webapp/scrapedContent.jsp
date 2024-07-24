@@ -4,6 +4,8 @@
 <%@ page import="com.mongodb.client.MongoClients, com.mongodb.client.MongoClient, com.mongodb.client.MongoDatabase, com.mongodb.client.MongoCollection, com.mongodb.client.model.Sorts, com.mongodb.client.FindIterable"%>
 <%@ page import="org.bson.Document" %>
 <%@ page import="com.mongodb.client.model.Filters" %>
+<jsp:include page="sessionCheck.jsp" />
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -72,88 +74,92 @@
             align-items: center;
             font-family: 'Poppins', sans-serif;
         }
+        .nowrap {
+            white-space: nowrap;
+        }
     </style>
 </head>
 <body>
 <nav>
     <div class="logo">
-        <img src="https://cdn.discordapp.com/attachments/649035487247597571/1253855182924677170/Untitled-removebg-preview.png?ex=66775f23&is=66760da3&hm=4fde98d0b3d7843fdcc82a73cdc921a507edafc110ffcce301d0e614bb9997fa&" alt="Logo Placeholder">
+        <img src="https://raw.githubusercontent.com/mudu1735/Falcon-Journalism/main/ARXlogo-removebg-preview.png" alt="Logo Placeholder">
         <span>Falcon Journalism</span>
     </div>
     <div class="nav-links">
         <a href="mainPage.jsp">Home</a>
         <a href="viewAllRecords.jsp">View All Records</a>
         <a href="userManual.jsp">User Manual</a>
-        <button onclick="window.location.href='loginPage.jsp'">Sign Out</button>
+        <% if ("admin".equals(session.getAttribute("user"))) { %>
+            <a href="uploadNames.jsp">Upload CSV</a>
+        <% } %>
+        <button onclick="window.location.href='sessionEnd.jsp'">Sign Out</button>
     </div>
 </nav>
 
 <h1>Newly Added Records</h1>
 
 <%
-    String scrapeUrl = request.getParameter("userLink");
-    String csvFile = "names.csv";
     
-    try {
-        NameFinder nf = new NameFinder(scrapeUrl);
-        int newLines = nf.findNamesInArticle(); // Retrieve the number of new lines
-		//System.out.println(newLines);
-        request.setAttribute("newLines", newLines);
+        String scrapeUrl = request.getParameter("userLink");
 
-        // Connect to MongoDB
-        MongoClient mongoClient = MongoClients.create("mongodb+srv://mudu1735:nB6zdJu0ap6DXmni@cluster0.jeailsf.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0");
-        MongoDatabase database = mongoClient.getDatabase("mudu1735");
-        MongoCollection<Document> collection = database.getCollection("interviewRecords");
+        try {
+            NameFinder nf = new NameFinder(scrapeUrl);
+            int newLines = nf.findNamesInArticle(); // Retrieve the number of new lines
+            request.setAttribute("newLines", newLines);
 
-        // Find last `newLines` documents sorted by insertion order
-        FindIterable<Document> cursor = collection.find().sort(Sorts.descending("_id")).limit(newLines);
+            // Connect to MongoDB
+            MongoClient mongoClient = MongoClients.create("mongodb+srv://mudu1735:nB6zdJu0ap6DXmni@cluster0.jeailsf.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0");
+            MongoDatabase database = mongoClient.getDatabase("mudu1735");
+            MongoCollection<Document> collection = database.getCollection("interviewRecords");
 
-        List<Document> documents = new ArrayList<>();
-        cursor.into(documents);
+            // Find last `newLines` documents sorted by insertion order
+            FindIterable<Document> cursor = collection.find().sort(Sorts.descending("_id")).limit(newLines);
 
+            List<Document> documents = new ArrayList<>();
+            cursor.into(documents);
 %>
-        <table>
-            <thead>
-                <tr>
-                    <th>First Name</th>
-                    <th>Last Name</th>
-                    <th>Grade</th>
-                    <th>House</th>
-                    <th>URL</th>
-                    <th>Date Added</th>
-                </tr>
-            </thead>
-            <tbody>
+            <table>
+                <thead>
+                    <tr>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Grade</th>
+                        <th>House</th>
+                        <th>URL</th>
+                        <th>Date Added</th>
+                    </tr>
+                </thead>
+                <tbody>
 <%
-        if (newLines == 0) {
+            if (newLines == 0) {
 %>
-            <p>No new interviews were found</p>
+                <p>No new interviews were found</p>
 <%
+            } else {
+                for (Document doc : documents) {
+%>
 
-        } else {
-        	for (Document doc : documents) {
-%>
-                <tr>
-                    <td><%= doc.getString("firstName") %></td>
-                    <td><%= doc.getString("lastName") %></td>
-                    <td><%= doc.getString("grade") %></td>
-                    <td><%= doc.getString("house") %></td>
-                    <td><a href="<%= doc.getString("url") %>"><%= doc.getString("url") %></a></td>
-                    <td><%= doc.getString("date") %></td>
-                </tr>
+                    <tr>
+                        <td><%= doc.getString("firstName") %></td>
+                        <td><%= doc.getString("lastName") %></td>
+                        <td><%= doc.getString("grade") %></td>
+                        <td><%= doc.getString("house") %></td>
+                        <td><a href="<%= doc.getString("url") %>"><%= doc.getString("url") %></a></td>
+                        <td class="nowrap"><%= doc.getString("date") %></td>
+                    </tr>
 <%
-        	}
+                }
+            }
+%>
+                </tbody>
+            </table>
+<%
+        } catch (IOException e) {
+%>
+            <p>Error fetching URL: <%= e.getMessage() %></p>
+<%
         }
+    
 %>
-            </tbody>
-        </table>
-<%
-    } catch (IOException e) {
-%>
-        <p>Error fetching URL: <%= e.getMessage() %></p>
-<%
-    }
-%>
-
 </body>
 </html>

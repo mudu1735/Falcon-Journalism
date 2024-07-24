@@ -1,3 +1,5 @@
+<%@ page import="mcps.phs.arx.NameFinder, mcps.phs.arx.LinkProcessing, mcps.phs.arx.LoginValidation" %>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -50,19 +52,28 @@
             width: 80%;
         }
         h1 {
-            margin-bottom: 10px;
+        	margin-top: -20px;
+            margin-bottom: 40px;
             font-size: 22px; /* Smaller font size to fit in one line */
             text-align: center;
         }
         h2 {
-            margin-top: 50px;
-            margin-bottom: 30px;
+            margin-top: 20px;
+            margin-bottom: 20px;
             font-size: 24px;
         }
         label {
             display: block;
             margin-bottom: 5px;
             font-weight: bold;
+        }
+        input[type="password"], input[type = "text"] {
+        	width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
         }
         input[type="password"], input[type="text"] {
             width: 100%;
@@ -95,6 +106,7 @@
             background-color: #D3D3D3;
         }
         .footer {
+        	margin-bottom: -10px;
             position: absolute;
             bottom: 20px;
             text-align: center;
@@ -112,13 +124,27 @@
         .login-message {
             display: none;
             position: absolute;
-            top: 86%;
+            top: 89%;
             left: 50%;
             transform: translate(-50%, -50%);
             background-color: rgba(255, 255, 255, 0);
             padding: 20px;
             border-radius: 0px;
             color: green;
+            font-weight: bold;
+            z-index: 10;
+        }
+        
+        .login-failed {
+            display: none;
+            position: absolute;
+            top: 89%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(255, 255, 255, 0);
+            padding: 20px;
+            border-radius: 0px;
+            color: red;
             font-weight: bold;
             z-index: 10;
         }
@@ -131,16 +157,64 @@
             <div class="form-container">
                 <h1>Poolesville Pulse Database</h1>
                 <h2>Sign In</h2>
-                <form id="loginForm" onsubmit="return validateForm()">
-                    <label for="username">Token</label>
-                    <input type="password" id="username" name="username" required>
+                <form action = "loginPage.jsp" method = "post">
+                   	<label for="username">Username</label>
+                  	<input type="text" id="username" name="username" required>
+                   	<label for="password">Password</label>
+                   	<input type="password" id="password" name="pass" required>
+                
                     <div class="show-password">
                         <input type="checkbox" id="showPassword" onclick="togglePasswordVisibility()">
                         <label for="showPassword">Show password</label>
                     </div>
                     <input type="submit" value="Sign In">
-                </form>
-                <div class="login-message" id="loginMessage">Logging you in...</div>
+               </form>
+               <div class="login-message" id="loginMessage" style = "display: none;">Logging you in...</div>
+			   <div class="login-failed" id="loginFailed" style="display: none;">Invalid credentials</div>
+               
+               
+<%
+		String user = request.getParameter("username");
+        String pass = request.getParameter("pass");
+        //System.out.println("Entered user: " + user);
+        //System.out.println("Entered pass: " + pass);
+		
+        //HttpSession session1 = request.getSession(); 
+
+		LoginValidation lv = new LoginValidation();
+		boolean vali = true;
+		vali = lv.loginCheck(user, pass);
+		//System.out.println(vali);
+		if(vali == true) {
+	            session.setAttribute("user", user); 
+	            
+				System.out.println("Login info valid");
+		
+%>
+ 				<script type="text/javascript">
+ 					var loginMessage = document.getElementById("loginMessage");
+ 	                loginMessage.style.display = "block"; // Show the login message
+
+ 	                setTimeout(function() {
+ 	                    window.location.href = "mainPage.jsp"; // Redirect to mainPage.jsp after 1.5 second
+ 	                }, 1500);
+ 				</script>
+				
+<%	
+		}
+		if(user != null && pass != null && !vali){
+			System.out.println("WRONGWRONGWRONG");
+			
+%>
+ 			<script type="text/javascript">
+ 				
+ 			document.getElementById("loginFailed").style="display: block;";
+ 			</script>
+<% 
+			}
+		
+%>
+                
             </div>
             <div class="footer">
                 &copy; 2024 - ARX
@@ -150,7 +224,7 @@
 
     <script>
         function togglePasswordVisibility() {
-            var passwordInput = document.getElementById("username");
+        	var passwordInput = document.getElementById("password");
             var showPasswordCheckbox = document.getElementById("showPassword");
             if (showPasswordCheckbox.checked) {
                 passwordInput.type = "text";
@@ -158,23 +232,20 @@
                 passwordInput.type = "password";
             }
         }
+        
 
-        function validateForm() {
-            var username = document.getElementById("username").value;
 
-            // Simple validation
-            if (username === "a") {
+        function loginRedirect() {		
+            // Validation
+            
+            	alert("HIIIII");
                 var loginMessage = document.getElementById("loginMessage");
                 loginMessage.style.display = "block"; // Show the login message
 
                 setTimeout(function() {
                     window.location.href = "mainPage.jsp"; // Redirect to mainPage.jsp after 1.5 second
                 }, 1500);
-
-                return false; // Prevent form submission
-            } else {
-                return false; // Prevent form submission
-            }
+   
         }
     </script>
 </body>

@@ -1,4 +1,5 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<jsp:include page="sessionCheck.jsp" />
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -68,7 +69,10 @@
         }
         h1 {
             margin-top: 50px;
-            margin-bottom: 20px;
+        }
+        h2 {
+        	margin-top: 10px;
+        	
         }
         .input-container {
             display: flex;
@@ -115,31 +119,70 @@
         .view-all-button {
             margin-top: 20px;
         }
+        .error-message {
+            color: red;
+            margin-top: 5px;
+            display: none;
+        }
     </style>
 </head>
 <body>
 
 <nav>
     <div class="logo">
-        <img src="https://cdn.discordapp.com/attachments/649035487247597571/1253855182924677170/Untitled-removebg-preview.png?ex=66775f23&is=66760da3&hm=4fde98d0b3d7843fdcc82a73cdc921a507edafc110ffcce301d0e614bb9997fa&" alt="Logo Placeholder">
+        <img src="https://raw.githubusercontent.com/mudu1735/Falcon-Journalism/main/ARXlogo-removebg-preview.png" alt="Logo Placeholder">
         <span>Falcon Journalism</span>
     </div>
     <div class="nav-links">
         <a href="mainPage.jsp">Home</a>
         <a href="viewAllRecords.jsp">View All Records</a>
         <a href="userManual.jsp">User Manual</a>
-        <button onclick="window.location.href='loginPage.jsp'">Sign Out</button>
+        <% if("admin".equals(session.getAttribute("user"))) {         
+			System.out.println("I AM ADMIN PLEASE");
+		%>
+        	<a href="uploadNames.jsp">Upload CSV</a> 
+
+        <% } %>
+        
+        <button onclick="window.location.href='sessionEnd.jsp'">Sign Out</button>
     </div>
 </nav>
 
 <h1>Falcon Journalism Interview Database</h1>
+<h2>
+    Welcome
+    <%=session.getAttribute("user") %>!
+</h2>
 
-<form action="scrapedContent.jsp" method="post">
-    <div class="input-container">
-        <input type="text" id="inputText" name="userLink" placeholder="Enter the link of your article" required>
-        <button type="submit">Submit</button>
-    </div>
-</form>
+
+    	<%
+    	String currentUser = (String)session.getAttribute("user");
+    	if("admin".equals(currentUser) || "editor".equals(currentUser)) { %>
+    		<form id="linkForm" action="scrapedContent.jsp" method="post" onsubmit="return validateForm()">
+    			<div class="input-container">
+    				<input type="text" id="inputText" name="userLink" placeholder="Enter the link of your article" required>
+        			<button type="submit">Submit</button>
+        		</div>
+    			<span id="error-message" class="error-message">Please enter a valid link</span>
+			</form>
+    	<% } %>
+    	
+
+<script>
+    function validateForm() {
+        var inputText = document.getElementById("inputText").value;
+        var errorMessage = document.getElementById("error-message");
+        var validUrl = "https://poolesvillepulse.org";
+
+        if (!inputText.startsWith(validUrl)) {
+            errorMessage.style.display = "block";
+            return false;
+        } else {
+            errorMessage.style.display = "none";
+            return true;
+        }
+    }
+</script>
 
 </body>
 </html>

@@ -3,6 +3,9 @@
 <%@ page import="org.bson.Document" %>
 <%@ page import="com.mongodb.client.model.Filters" %>
 <%@ page import="java.util.ArrayList, java.util.List" %>
+
+<jsp:include page="sessionCheck.jsp" />	
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -101,19 +104,29 @@
             background-color: #ddd;
             color: black;
         }
+        .nowrap {
+            white-space: nowrap;
+        }
     </style>
 </head>
 <body>
 <nav>
     <div class="logo">
-        <img src="https://cdn.discordapp.com/attachments/649035487247597571/1253855182924677170/Untitled-removebg-preview.png?ex=66775f23&is=66760da3&hm=4fde98d0b3d7843fdcc82a73cdc921a507edafc110ffcce301d0e614bb9997fa&" alt="Logo Placeholder">
+        <img src="https://raw.githubusercontent.com/mudu1735/Falcon-Journalism/main/ARXlogo-removebg-preview.png" alt="Logo Placeholder">
         <span>Falcon Journalism</span>
     </div>
     <div class="nav-links">
         <a href="mainPage.jsp">Home</a>
         <a href="viewAllRecords.jsp">View All Records</a>
         <a href="userManual.jsp">User Manual</a>
-        <button onclick="window.location.href='loginPage.jsp'">Sign Out</button>
+        <% if("admin".equals(session.getAttribute("user"))) {         
+			System.out.println("I AM ADMIN PLEASE");
+		%>
+        	<a href="uploadNames.jsp">Upload CSV</a> 
+
+        <% } %>
+        
+        <button onclick="window.location.href='sessionEnd.jsp'">Sign Out</button>
     </div>
 </nav>
 
@@ -136,8 +149,8 @@
     </select>
     <label for="sortOrder">Sort By Date:</label>
     <select id="sortOrder" name="sortOrder">
-        <option value="asc" <%= "asc".equals(request.getParameter("sortOrder")) ? "selected" : "" %>>Ascending</option>
         <option value="desc" <%= "desc".equals(request.getParameter("sortOrder")) ? "selected" : "" %>>Descending</option>
+        <option value="asc" <%= "asc".equals(request.getParameter("sortOrder")) ? "selected" : "" %>>Ascending</option>
     </select>
     <button type="submit">Search</button>
 </form>
@@ -200,7 +213,7 @@
         <td><%= record.getString("grade") %></td>
         <td><%= record.getString("house") %></td>
         <td><a href="<%= record.getString("url") %>"><%= record.getString("url") %></a></td>
-        <td><%= record.getString("date") %></td>
+        <td class="nowrap"><%= record.getString("date") %></td>
     </tr>
     <% } %>
     </tbody>
