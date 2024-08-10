@@ -137,8 +137,15 @@
     <input type="text" id="searchFirstName" name="searchFirstName">
     <label for="searchLastName">Last Name:</label>
     <input type="text" id="searchLastName" name="searchLastName">
-    <label for="searchGrade">Grade:</label>
-    <input type="text" id="searchGrade" name="searchGrade">
+    <label for="searchGrade">Grade:</label>    
+    <select id="searchGrade" name="searchGrade">
+        <option value="">All</option>
+        <option value="9" <%= "9".equalsIgnoreCase(request.getParameter("searchGrade")) ? "selected" : "" %>>9</option>
+        <option value="10" <%= "10".equalsIgnoreCase(request.getParameter("searchGrade")) ? "selected" : "" %>>10</option>
+        <option value="11" <%= "11".equalsIgnoreCase(request.getParameter("searchGrade")) ? "selected" : "" %>>11</option>
+        <option value="12" <%= "12".equalsIgnoreCase(request.getParameter("searchGrade")) ? "selected" : "" %>>12</option>
+        <option value="Staff" <%= "Staff".equalsIgnoreCase(request.getParameter("searchGrade")) ? "selected" : "" %>>Staff</option>
+    </select>
     <label for="searchHouse">House:</label>
     <select id="searchHouse" name="searchHouse">
         <option value="">All</option>
