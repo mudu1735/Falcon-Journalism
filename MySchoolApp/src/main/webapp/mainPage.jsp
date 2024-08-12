@@ -140,7 +140,7 @@
         <% if("admin".equals(session.getAttribute("user"))) {         
 			System.out.println("I AM ADMIN PLEASE");
 		%>
-        	<a href="uploadNames.jsp">Upload CSV</a> 
+        	<a href="uploadNames.jsp">Update Names</a> 
 
         <% } %>
         

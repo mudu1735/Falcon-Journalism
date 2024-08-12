@@ -90,7 +90,7 @@
         <a href="viewAllRecords.jsp">View All Records</a>
         <a href="userManual.jsp">User Manual</a>
         <% if ("admin".equals(session.getAttribute("user"))) { %>
-            <a href="uploadNames.jsp">Upload CSV</a>
+            <a href="uploadNames.jsp">Update Names</a>
         <% } %>
         <button onclick="window.location.href='sessionEnd.jsp'">Sign Out</button>
     </div>

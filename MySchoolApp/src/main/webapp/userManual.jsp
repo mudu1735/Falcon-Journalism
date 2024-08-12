@@ -106,7 +106,7 @@
         <a href="userManual.jsp">User Manual</a>
         <% if("admin".equals(session.getAttribute("user"))) {         
 		%>
-        	<a href="uploadNames.jsp">Upload CSV</a> 
+        	<a href="uploadNames.jsp">Update Names</a> 
 
         <% } %>
         
