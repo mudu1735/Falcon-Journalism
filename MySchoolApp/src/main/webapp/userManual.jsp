@@ -7,7 +7,7 @@
 <html>
 <head>
 <meta charset="ISO-8859-1">
-<title>User Guide - Falcon Journalism</title>
+<title>User Manual</title>
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400&display=swap');
     body {
