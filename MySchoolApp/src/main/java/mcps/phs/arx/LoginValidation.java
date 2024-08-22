@@ -12,6 +12,7 @@ import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.MongoIterable;
 import com.mongodb.client.model.Filters.*;
 import static com.mongodb.client.model.Filters.eq;
+import static com.mongodb.client.model.Filters.and;
 import javax.servlet.RequestDispatcher; 
 import javax.servlet.ServletException; 
 import javax.servlet.annotation.WebServlet; 
@@ -46,12 +47,13 @@ public class LoginValidation {
 		logins = database.getCollection("loginInfo");
 		//System.out.println("User- " + user);
 		//System.out.println("Pass- " + pass);
-		
-	    Document userCheck = logins.find(eq("username", user)).first();
-	    Document passCheck = logins.find(eq("password", pass)).first();
+	    Document loginCheck = logins.find(and(eq("username", user), eq("password", pass))).first();
+
+	    //Document userCheck = logins.find(eq("username", user)).first();
+	    //Document passCheck = logins.find(eq("password", pass)).first();
 	    
 	    //System.out.println(myDoc);
-	    if(userCheck == null || passCheck == null) {
+	    if(loginCheck == null) {
 	    	return false;
 	    }
 		

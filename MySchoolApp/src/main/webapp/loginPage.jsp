@@ -1,4 +1,14 @@
 <%@ page import="mcps.phs.arx.NameFinder, mcps.phs.arx.LinkProcessing, mcps.phs.arx.LoginValidation" %>
+<%@ page import="java.io.*, java.util.*, com.mongodb.client.*" %>
+<%@ page import="com.mongodb.client.MongoClients, com.mongodb.client.MongoClient, com.mongodb.client.MongoDatabase, com.mongodb.client.MongoCollection" %>
+<%@ page import="org.bson.Document" %>
+<%@ page import="com.mongodb.client.result.InsertOneResult" %>
+<%@ page import="java.util.Date" %>
+<%@ page import="java.text.DateFormat" %>
+<%@ page import="java.text.SimpleDateFormat" %>
+
+
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -184,10 +194,36 @@
 		LoginValidation lv = new LoginValidation();
 		boolean vali = true;
 		vali = lv.loginCheck(user, pass);
+		
 		//System.out.println(vali);
 		if(vali == true) {
+	        	DateFormat formatter = new SimpleDateFormat("MM/dd/yyyy 'at' hh:mma 'ET'");
+	        	TimeZone etTimeZone = TimeZone.getTimeZone("America/New_York");
+	        	formatter.setTimeZone( etTimeZone );
+
+	        	Date date = new Date();
+	        	System.out.println(formatter.format(date.getTime()));
+
+
+
+
+
 	            session.setAttribute("user", user); 
 	            
+	            //MongoDB Log
+	            String connectionString = "mongodb+srv://mudu1735:nB6zdJu0ap6DXmni@cluster0.jeailsf.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
+    			String databaseName = "mudu1735";
+    			String collectionName = "journalismLog";
+    			
+    			MongoClient mongoClient = MongoClients.create(connectionString);
+    			MongoDatabase database = mongoClient.getDatabase(databaseName);
+    	        MongoCollection<Document> collection = database.getCollection(collectionName);
+    	        Document newDoc = new Document("User", user)
+    	        					.append("Time", formatter.format(date.getTime()));
+    	        collection.insertOne(newDoc);
+    	        			
+    	    
+    			
 				System.out.println("Login info valid");
 		
 %>

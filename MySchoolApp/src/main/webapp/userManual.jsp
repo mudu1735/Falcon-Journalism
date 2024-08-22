@@ -20,6 +20,7 @@
     }
     nav {
         width: 100%;
+        height: 10vh;
         background-color: #000000;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         display: flex;
@@ -44,14 +45,15 @@
     nav a, nav button {
         color: #f2f2f2;
         text-align: center;
-        padding: 10px 15px;
+        padding: 0px 18px;
         text-decoration: none;
         background: none;
         border: none;
         cursor: pointer;
         font-size: 18px;
         font-family: 'Poppins', sans-serif;
-        
+        transition: 0.3s ease;
+
     }
     nav a:hover, nav button:hover {
         color: #d4af37;

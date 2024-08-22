@@ -65,6 +65,7 @@
             cursor: pointer;
             font-size: 18px;
             font-family: 'Poppins', sans-serif;
+            transition: 0.3s ease;
         }
         nav a:hover, nav button:hover {
             color: #d4af37;

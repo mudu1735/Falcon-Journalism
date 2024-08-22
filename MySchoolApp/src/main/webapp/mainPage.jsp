@@ -46,11 +46,12 @@
             line-height: 60px; /* Adjust line-height to center text vertically */
         }
         nav a, nav button, .logo span {
-            display: flex;
+        	justify-content: space-between;
+            display: inline-flex;
             align-items: center;
             color: #f2f2f2;
             text-align: center;
-            padding: 14px 16px;
+            padding: 0px 18px;
             text-decoration: none;
             background: none;
             border: none;
@@ -58,6 +59,7 @@
             font-size: 18px;
             line-height: 32px; /* Adjust line-height to center text vertically */
             font-family: 'Poppins', sans-serif;
+            transition: 0.3s ease;
         }
         nav a:hover, nav button:hover {
             color: #d4af37;

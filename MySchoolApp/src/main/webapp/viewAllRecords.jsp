@@ -31,7 +31,7 @@
         }
         nav {
             width: 100%;
-            height: 10%;
+            height: 10vh;
             background-color: #000000;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             display: flex;
@@ -56,13 +56,15 @@
             display: block;
             color: #f2f2f2;
             text-align: center;
-            padding: 14px 16px;
+            padding: 0px 18px;
             text-decoration: none;
             background: none;
             border: none;
             cursor: pointer;
             font-size: 18px;
             font-family: 'Poppins', sans-serif;
+            transition: 0.3s ease;
+            
         }
         nav a:hover, nav button:hover {
             color: #d4af37;
@@ -204,7 +206,7 @@
 <table>
     <thead>
     <tr>
-        <th>First Name</th>
+        <th class="nowrap">First Name</th>
         <th>Last Name</th>
         <th>Grade</th>
         <th>House</th>
@@ -218,7 +220,7 @@
         <td><%= record.getString("firstName") %></td>
         <td><%= record.getString("lastName") %></td>
         <td><%= record.getString("grade") %></td>
-        <td><%= record.getString("house") %></td>
+        <td class="nowrap"><%= record.getString("house") %></td>
         <td><a href="<%= record.getString("url") %>"><%= record.getString("url") %></a></td>
         <td class="nowrap"><%= record.getString("date") %></td>
     </tr>
